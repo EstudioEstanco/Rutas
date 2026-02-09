@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Route Tracker</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --color-primary: #38bdf8;
+            --color-primary-hover: #0284c7;
+            --color-bg: #0f172a;
+            --color-surface: #1e293b;
+            --color-text: #f1f5f9;
+            --color-text-secondary: #cbd5e1;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            gap: 0;
+        }
+
+        #map {
+            flex: 1;
+            z-index: 1;
+        }
+
+        .sidebar {
+            width: 380px;
+            background-color: var(--color-surface);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid rgba(203, 213, 225, 0.2);
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.hidden {
+            width: 0;
+            overflow: hidden;
+            border-left: none;
+        }
+
+        .toggle-sidebar-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            color: #0f172a;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-sidebar-btn:hover {
+            background-color: var(--color-primary-hover);
+            transform: scale(1.1);
+        }
+
+        .toggle-sidebar-btn:active {
+            transform: scale(0.95);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(203, 213, 225, 0.2);
+            background-color: rgba(15, 23, 42, 0.5);
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: var(--color-primary);
+        }
+
+        .sidebar-header p {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+
+        .sidebar-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--color-text-secondary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(203, 213, 225, 0.3);
+            border-radius: 6px;
+            color: var(--color-text);
+            font-family: inherit;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            background-color: rgba(30, 41, 59, 1);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .location-info {
+            background-color: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 0.875rem;
+        }
+
+        .location-info p {
+            margin: 4px 0;
+            color: var(--color-text-secondary);
+        }
+
+        .location-info strong {
+            color: var(--color-primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: #0f172a;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: rgba(203, 213, 225, 0.1);
+            color: var(--color-text-secondary);
+            border: 1px solid rgba(203, 213, 225, 0.2);
+            margin-top: 8px;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(203, 213, 225, 0.2);
+        }
+
+        .deliveries-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .delivery-item {
+            background-color: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(203, 213, 225, 0.2);
+            border-radius: 6px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .delivery-item:hover {
+            background-color: rgba(30, 41, 59, 0.8);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        .delivery-item h3 {
+            font-size: 0.95rem;
+            color: var(--color-text);
+            margin-bottom: 4px;
+        }
+
+        .delivery-item p {
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            margin: 2px 0;
+        }
+
+        .delivery-item .coords {
+            font-size: 0.75rem;
+            color: rgba(56, 189, 248, 0.7);
+            font-family: monospace;
+            margin-top: 6px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid rgba(203, 213, 225, 0.2);
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            color: var(--color-text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .status-pending {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+        }
+
+        .status-completed {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--color-success);
+        }
+
+        .gps-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(56, 189, 248, 0.3);
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state p {
+            margin: 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            #map {
+                height: 50%;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid rgba(203, 213, 225, 0.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="toggle-sidebar-btn" onclick="toggleSidebar()" title="Mostrar/Ocultar menú">☰</button>
+    <div class="container">
+        <div id="map"></div>
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>📦 Rutas de Reparto</h1>
+                <p>Gestor de entregas con GPS</p>
+            </div>
+
+            <div class="sidebar-content">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('new-delivery')">Nueva Entrega</button>
+                    <button class="tab-btn" onclick="switchTab('deliveries')">Historial</button>
+                </div>
+
+                <!-- Tab: Nueva Entrega -->
+                <div id="new-delivery" class="tab-content active">
+                    <div class="form-group gps-button">
+                        <button class="btn btn-primary" onclick="getCurrentLocation()">
+                            <span id="gps-icon">📍</span>
+                            <span>Obtener Ubicación GPS</span>
+                        </button>
+                    </div>
+
+                    <div id="location-display" class="location-info" style="display: none;">
+                        <p><strong>Latitud:</strong> <span id="lat-display">-</span></p>
+                        <p><strong>Longitud:</strong> <span id="lng-display">-</span></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="place-name">Nombre del Lugar</label>
+                        <input type="text" id="place-name" placeholder="Ej: Casa García, Oficina Central, Tienda..." />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="observation">Observaciones</label>
+                        <textarea id="observation" placeholder="Ej: Llamar a timbre azul, Dejar en recepción, Horario 9-14..."></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="saveDelivery()" style="margin-top: 8px;">
+                        ✓ Guardar Entrega
+                    </button>
+                </div>
+
+                <!-- Tab: Historial -->
+                <div id="deliveries" class="tab-content">
+                    <div id="deliveries-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        let map;
+        let currentMarker = null;
+        let currentLocation = { lat: null, lng: null };
+        let deliveries = JSON.parse(localStorage.getItem('deliveries')) || [];
+        let deliveryMarkers = {};
+
+        // Inicializar mapa
+        function initMap() {
+            const defaultLat = 42.9;
+            const defaultLng = -6.3;
+
+            map = L.map('map').setView([defaultLat, defaultLng], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19,
+                tileSize: 256,
+            }).addTo(map);
+
+            map.on('click', function(e) {
+                setLocationFromMap(e.latlng.lat, e.latlng.lng);
+            });
+
+            renderDeliveries();
+            addDeliveryMarkers();
+        }
+
+        // Agregar chinchetas de entregas guardadas
+        function addDeliveryMarkers() {
+            deliveries.forEach(delivery => {
+                if (deliveryMarkers[delivery.id]) {
+                    map.removeLayer(deliveryMarkers[delivery.id]);
+                }
+
+                const marker = L.marker([delivery.lat, delivery.lng], {
+                    icon: L.icon({
+                        iconUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2310b981" width="28" height="28"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',
+                        iconSize: [28, 28],
+                        iconAnchor: [14, 28],
+                        popupAnchor: [0, -28],
+                    })
+                }).bindPopup(`<strong>${delivery.placeName}</strong><br/>${delivery.observation || 'Sin observaciones'}<br/><small>${delivery.timestamp}</small>`)
+                  .addTo(map);
+
+                deliveryMarkers[delivery.id] = marker;
+            });
+        }
+
+        // Alternar visibilidad del menú lateral
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const btn = document.querySelector('.toggle-sidebar-btn');
+            sidebar.classList.toggle('hidden');
+            btn.textContent = sidebar.classList.contains('hidden') ? '▶' : '☰';
+        }
+
+        // Obtener ubicación GPS actual
+        function getCurrentLocation() {
+            const btn = document.querySelector('.gps-button button');
+            const icon = document.getElementById('gps-icon');
+            
+            if (!navigator.geolocation) {
+                alert('GPS no disponible en este navegador');
+                return;
+            }
+
+            icon.innerHTML = '<span class="spinner"></span>';
+            btn.disabled = true;
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const { latitude, longitude } = position.coords;
+                    setLocationFromMap(latitude, longitude);
+                    icon.innerHTML = '📍';
+                    btn.disabled = false;
+                },
+                function(error) {
+                    alert('Error al obtener GPS: ' + error.message);
+                    icon.innerHTML = '📍';
+                    btn.disabled = false;
+                }
+            );
+        }
+
+        // Establecer ubicación desde mapa o GPS
+        function setLocationFromMap(lat, lng) {
+            currentLocation = { lat, lng };
+
+            document.getElementById('lat-display').textContent = lat.toFixed(6);
+            document.getElementById('lng-display').textContent = lng.toFixed(6);
+            document.getElementById('location-display').style.display = 'block';
+
+            if (currentMarker) {
+                map.removeLayer(currentMarker);
+            }
+
+            currentMarker = L.marker([lat, lng], {
+                icon: L.icon({
+                    iconUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2338bdf8" width="32" height="32"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5z"/></svg>',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 16],
+                })
+            }).addTo(map);
+
+            map.setView([lat, lng], 15);
+        }
+
+        // Guardar entrega
+        function saveDelivery() {
+            if (!currentLocation.lat) {
+                alert('Por favor, selecciona una ubicación en el mapa o usa GPS');
+                return;
+            }
+
+            const placeName = document.getElementById('place-name').value.trim();
+            if (!placeName) {
+                alert('Por favor, ingresa el nombre del lugar');
+                return;
+            }
+
+            const observation = document.getElementById('observation').value.trim();
+
+            const delivery = {
+                id: Date.now(),
+                placeName,
+                observation,
+                lat: currentLocation.lat,
+                lng: currentLocation.lng,
+                timestamp: new Date().toLocaleString('es-ES'),
+                status: 'pending'
+            };
+
+            deliveries.unshift(delivery);
+            localStorage.setItem('deliveries', JSON.stringify(deliveries));
+
+            document.getElementById('place-name').value = '';
+            document.getElementById('observation').value = '';
+            document.getElementById('location-display').style.display = 'none';
+
+            if (currentMarker) {
+                map.removeLayer(currentMarker);
+                currentMarker = null;
+            }
+
+            currentLocation = { lat: null, lng: null };
+
+            renderDeliveries();
+            addDeliveryMarkers();
+            alert('✓ Entrega guardada correctamente');
+        }
+
+        // Renderizar lista de entregas
+        function renderDeliveries() {
+            const container = document.getElementById('deliveries-container');
+
+            if (deliveries.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>📭 No hay entregas registradas</p><p style="font-size: 0.8rem;">Haz clic en el mapa o usa GPS para crear una</p></div>';
+                return;
+            }
+
+            container.innerHTML = deliveries.map(delivery => `
+                <div class="delivery-item" onclick="focusDelivery(${delivery.id})">
+                    <h3>${delivery.placeName}</h3>
+                    <p>📅 ${delivery.timestamp}</p>
+                    ${delivery.observation ? `<p>📝 ${delivery.observation}</p>` : ''}
+                    <div class="coords">${delivery.lat.toFixed(4)}, ${delivery.lng.toFixed(4)}</div>
+                    <span class="status-badge ${delivery.status === 'completed' ? 'status-completed' : 'status-pending'}">
+                        ${delivery.status === 'completed' ? '✓ Completada' : '⏳ Pendiente'}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        // Enfocar entrega en el mapa
+        function focusDelivery(id) {
+            const delivery = deliveries.find(d => d.id === id);
+            if (delivery) {
+                map.setView([delivery.lat, delivery.lng], 16);
+                L.popup()
+                    .setLatLng([delivery.lat, delivery.lng])
+                    .setContent(`<strong>${delivery.placeName}</strong><br/>${delivery.observation || 'Sin observaciones'}`)
+                    .openOn(map);
+            }
+        }
+
+        // Cambiar pestaña
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Iniciar aplicación
+        window.addEventListener('load', initMap);
+    </script>
+</body>
+</html>
