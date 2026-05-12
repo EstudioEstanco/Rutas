@@ -1,6 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Web en GitHub</title>
+    <style>
+        /* Configuramos el fondo de la página */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            color: white;
+
+            /* CONFIGURACIÓN DE LA IMAGEN */
+            /* Si tu imagen está en una carpeta llamada 'img', la ruta es: img/nombre.jpg */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('img/fondo.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px); /* Efecto de cristal esmerilado */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        video {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Bienvenidos a mi Web</h1>
+        
+        <video autoplay loop muted playsinline>
+            <source src="video.mp4" type="video/mp4">
+            Tu navegador no soporta videos.
+        </video>
+    </div>
+
+</body>
+</html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estudio Estanco | Sonido con Identidad</title>
