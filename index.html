@@ -6,6 +6,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Web GitHub</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            
+            /* COLOR BLANCO PARA TODA LA WEB */
+            color: #ffffff; 
+
+            /* FONDO: El 0.2 hace que la capa oscura sea casi invisible (muy transparente) */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('img/fondo.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5); /* Caja oscura para resaltar el texto blanco */
+            padding: 40px;
+            border-radius: 25px;
+            backdrop-filter: blur(8px);
+            max-width: 80%;
+        }
+
+        h1 {
+            /* TAMAÑO DE LETRA MÁS GRANDE */
+            font-size: 3.5rem; /* Tamaño extra grande */
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 4px 10px rgba(0,0,0,0.7);
+        }
+
+        p {
+            /* TAMAÑO DE LETRA DEL PÁRRAFO */
+            font-size: 1.5rem; 
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+
+        video {
+            width: 100%;
+            max-width: 700px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>MI TÍTULO</h1>
+        <p>Este es un texto más grande y legible.</p>
+        
+        <video autoplay loop muted playsinline>
+            <source src="video.mp4" type="video/mp4">
+            Tu navegador no soporta videos.
+        </video>
+    </div>
+
+</body>
+</html>
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Web en GitHub</title>
     <style>
         /* Configuramos el fondo de la página */
