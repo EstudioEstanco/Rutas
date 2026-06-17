@@ -22,7 +22,7 @@
             margin: 0;
             padding: 0;
             background-color: transparent; /* Transparente para dejar ver el fondo multimedia */
-            background-image: url(´img/fondo.png´)
+            
             color: var(--light);
             line-height: 1.6;
             scroll-behavior: smooth;
@@ -35,9 +35,10 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: -2; /* Se coloca detrás de todo el contenido */
+            z-index: -1; /* Se coloca detrás de todo el contenido */
             overflow: hidden;
             background-color: var(--dark); /* Color de respaldo */
+            background-image: url(´img/fondo.png´)
         }
 
         .bg-container video, 
