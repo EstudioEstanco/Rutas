@@ -942,7 +942,518 @@
         <div class="contact-info">📱 Teléfono: <a href="tel:+34653684728">653 684 728</a></div>
         <a href="https://wa.me/34653684728" class="whatsapp-btn">Enviar WhatsApp</a>
     </section>
+    
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secciones – Estudio Estanco</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --bg:       #0e0e0e;
+      --bg2:      #161616;
+      --bg3:      #1f1f1f;
+      --border:   rgba(255,255,255,0.08);
+      --border2:  rgba(255,255,255,0.15);
+      --text:     #e8e8e8;
+      --muted:    #888;
+      --accent:   #c8a96e;
+      --accent2:  rgba(200,169,110,0.12);
+      --radius:   6px;
+      --font:     'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ── Shared section styles ── */
+    .section {
+      padding: 6rem 2rem;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .section + .section {
+      border-top: 0.5px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      line-height: 1.25;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 3rem;
+      max-width: 480px;
+    }
+
+    /* ── Form ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .form-grid .full { grid-column: 1 / -1; }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      background: var(--bg3);
+      border: 0.5px solid var(--border2);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: var(--accent);
+    }
+
+    .field textarea { resize: vertical; min-height: 110px; }
+
+    .btn {
+      margin-top: 1.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 0.5px solid var(--accent);
+      color: var(--accent);
+      font-family: var(--font);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 11px 26px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn:hover { background: var(--accent); color: #0e0e0e; }
+
+    .form-feedback {
+      margin-top: 1rem;
+      font-size: 13px;
+      color: var(--accent);
+      display: none;
+    }
+
+    /* ── Calculator ── */
+    .calc-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .calc-inputs { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .slider-group { display: flex; flex-direction: column; gap: 6px; }
+    .slider-group label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .slider-row { display: flex; align-items: center; gap: 12px; }
+
+    .slider-row input[type=range] {
+      flex: 1;
+      accent-color: var(--accent);
+      height: 3px;
+      cursor: pointer;
+    }
+
+    .slider-val {
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      min-width: 50px;
+      text-align: right;
+      color: var(--text);
+    }
+
+    .calc-results { display: flex; flex-direction: column; gap: 1rem; }
+
+    .result-card {
+      background: var(--bg3);
+      border: 0.5px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.3rem;
+    }
+
+    .result-card .r-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .result-card .r-value {
+      font-size: 1.9rem;
+      font-weight: 300;
+      color: var(--accent);
+      line-height: 1.15;
+    }
+
+    .result-card .r-detail {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Diagram */
+    .room-diagram-wrap {
+      margin-top: 1.5rem;
+    }
+
+    .room-diagram-wrap p {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    #roomSvg {
+      width: 100%;
+      height: 200px;
+    }
+
+    /* Warning */
+    .calc-note {
+      margin-top: 1.5rem;
+      font-size: 12px;
+      color: var(--muted);
+      border-left: 2px solid var(--border2);
+      padding-left: 10px;
+      line-height: 1.5;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .calc-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     SECCIÓN 1: FORMULARIO DE CONTACTO
+     ══════════════════════════════════ -->
+<section class="section" id="contacto">
+  <p class="section-label">Contacto</p>
+  <h2 class="section-title">Hablemos de tu proyecto</h2>
+  <p class="section-sub">Cuéntanos qué tienes en mente. Te respondemos en menos de 48 horas.</p>
+
+  <div class="form-grid">
+    <div class="field">
+      <label for="nombre">Nombre</label>
+      <input type="text" id="nombre" placeholder="Tu nombre" />
+    </div>
+    <div class="field">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" placeholder="tu@email.com" />
+    </div>
+    <div class="field">
+      <label for="telefono">Teléfono (opcional)</label>
+      <input type="tel" id="telefono" placeholder="+34 600 000 000" />
+    </div>
+    <div class="field">
+      <label for="servicio">Servicio de interés</label>
+      <select id="servicio">
+        <option value="">Selecciona una opción</option>
+        <option>Grabación</option>
+        <option>Mezcla y masterización</option>
+        <option>Producción musical</option>
+        <option>Acondicionamiento acústico</option>
+        <option>Otro</option>
+      </select>
+    </div>
+    <div class="field full">
+      <label for="mensaje">Mensaje</label>
+      <textarea id="mensaje" placeholder="Cuéntanos tu proyecto, fechas estimadas, dudas…"></textarea>
+    </div>
+  </div>
+
+  <button class="btn" onclick="enviarFormulario()">
+    Enviar mensaje →
+  </button>
+  <p class="form-feedback" id="formFeedback">✓ Mensaje enviado. Nos ponemos en contacto contigo pronto.</p>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     SECCIÓN 2: CALCULADORA DE PANELES ACÚSTICOS
+     ══════════════════════════════════════════════ -->
+<section class="section" id="calculadora">
+  <p class="section-label">Herramienta</p>
+  <h2 class="section-title">Calcula el acondicionamiento de tu sala</h2>
+  <p class="section-sub">Introduce las dimensiones de tu sala y te indicamos cuántos paneles necesitas y dónde colocarlos.</p>
+
+  <div class="calc-layout">
+    <!-- Inputs -->
+    <div class="calc-inputs">
+
+      <div class="slider-group">
+        <label>Largo de la sala</label>
+        <div class="slider-row">
+          <input type="range" id="largo" min="2" max="20" value="6" step="0.5" oninput="calcular()" />
+          <span class="slider-val" id="largoVal">6.0 m</span>
+        </div>
+      </div>
+
+      <div class="slider-group">
+        <label>Ancho de la sala</label>
+        <div class="slider-row">
+          <input type="range" id="ancho" min="2" max="20" value="4" step="0.5" oninput="calcular()" />
+          <span class="slider-val" id="anchoVal">4.0 m</span>
+        </div>
+      </div>
+
+      <div class="slider-group">
+        <label>Altura de la sala</label>
+        <div class="slider-row">
+          <input type="range" id="altura" min="2" max="6" value="2.5" step="0.1" oninput="calcular()" />
+          <span class="slider-val" id="alturaVal">2.5 m</span>
+        </div>
+      </div>
+
+      <div class="slider-group">
+        <label>Uso de la sala</label>
+        <div class="slider-row" style="gap:8px; flex-wrap: wrap;">
+          <label style="text-transform:none; font-size:13px; color:var(--text); display:flex; align-items:center; gap:4px; cursor:pointer;">
+            <input type="radio" name="uso" value="0.15" onchange="calcular()" checked style="accent-color:var(--accent);" />
+            Sala de ensayo
+          </label>
+          <label style="text-transform:none; font-size:13px; color:var(--text); display:flex; align-items:center; gap:4px; cursor:pointer;">
+            <input type="radio" name="uso" value="0.20" onchange="calcular()" style="accent-color:var(--accent);" />
+            Estudio de grabación
+          </label>
+          <label style="text-transform:none; font-size:13px; color:var(--text); display:flex; align-items:center; gap:4px; cursor:pointer;">
+            <input type="radio" name="uso" value="0.25" onchange="calcular()" style="accent-color:var(--accent);" />
+            Control / mezcla
+          </label>
+        </div>
+      </div>
+
+      <div class="slider-group">
+        <label>Tamaño de cada panel</label>
+        <div class="slider-row" style="gap:8px; flex-wrap: wrap;">
+          <label style="text-transform:none; font-size:13px; color:var(--text); display:flex; align-items:center; gap:4px; cursor:pointer;">
+            <input type="radio" name="panel" value="0.36" onchange="calcular()" style="accent-color:var(--accent);" />
+            60×60 cm
+          </label>
+          <label style="text-transform:none; font-size:13px; color:var(--text); display:flex; align-items:center; gap:4px; cursor:pointer;">
+            <input type="radio" name="panel" value="0.6" onchange="calcular()" checked style="accent-color:var(--accent);" />
+            60×100 cm
+          </label>
+          <label style="text-transform:none; font-size:13px; color:var(--text); display:flex; align-items:center; gap:4px; cursor:pointer;">
+            <input type="radio" name="panel" value="1.2" onchange="calcular()" style="accent-color:var(--accent);" />
+            120×100 cm
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Results -->
+    <div class="calc-results">
+      <div class="result-card">
+        <p class="r-label">Superficie total de sala</p>
+        <p class="r-value" id="resSup">—</p>
+        <p class="r-detail">Suma de todas las superficies</p>
+      </div>
+      <div class="result-card">
+        <p class="r-label">Superficie a tratar</p>
+        <p class="r-value" id="resTratar">—</p>
+        <p class="r-detail">Porcentaje recomendado según el uso</p>
+      </div>
+      <div class="result-card">
+        <p class="r-label">Paneles necesarios</p>
+        <p class="r-value" id="resPaneles">—</p>
+        <p class="r-detail" id="resPanelesDetalle">—</p>
+      </div>
+
+      <div class="room-diagram-wrap">
+        <p>Distribución orientativa</p>
+        <svg id="roomSvg" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+    </div>
+  </div>
+
+  <p class="calc-note">
+    Cálculo orientativo basado en el método de Sabine adaptado. La distribución real puede variar
+    según materiales existentes, geometría de la sala y objetivos sonoros específicos.
+    Consúltanos para un estudio personalizado.
+  </p>
+</section>
+
+
+<script>
+  /* ── Form ── */
+  function enviarFormulario() {
+    const nombre  = document.getElementById('nombre').value.trim();
+    const email   = document.getElementById('email').value.trim();
+    const mensaje = document.getElementById('mensaje').value.trim();
+    const fb      = document.getElementById('formFeedback');
+    if (!nombre || !email || !mensaje) {
+      fb.style.display = 'block';
+      fb.style.color   = '#e24b4a';
+      fb.textContent   = '✕ Rellena al menos el nombre, el correo y el mensaje.';
+      return;
+    }
+    fb.style.display = 'block';
+    fb.style.color   = 'var(--accent)';
+    fb.textContent   = '✓ Mensaje enviado. Nos ponemos en contacto contigo pronto.';
+  }
+
+  /* ── Calculator ── */
+  function getRadio(name) {
+    return parseFloat(document.querySelector(`input[name="${name}"]:checked`).value);
+  }
+
+  function calcular() {
+    const L = parseFloat(document.getElementById('largo').value);
+    const W = parseFloat(document.getElementById('ancho').value);
+    const H = parseFloat(document.getElementById('altura').value);
+
+    document.getElementById('largoVal').textContent  = L.toFixed(1) + ' m';
+    document.getElementById('anchoVal').textContent  = W.toFixed(1) + ' m';
+    document.getElementById('alturaVal').textContent = H.toFixed(1) + ' m';
+
+    const ratio      = getRadio('uso');
+    const panelSize  = getRadio('panel');
+
+    const suelo      = L * W;
+    const paredes    = 2 * (L * H) + 2 * (W * H);
+    const techo      = suelo;
+    const total      = suelo + paredes + techo;
+    const tratar     = total * ratio;
+    const paneles    = Math.ceil(tratar / panelSize);
+
+    document.getElementById('resSup').textContent     = total.toFixed(1) + ' m²';
+    document.getElementById('resTratar').textContent  = tratar.toFixed(1) + ' m²';
+    document.getElementById('resPaneles').textContent = paneles;
+    document.getElementById('resPanelesDetalle').textContent =
+      `Panel de ${(panelSize * 10000 / 100).toFixed(0)} cm × … (${panelSize.toFixed(2)} m² c/u)`;
+
+    dibujarSala(L, W, paneles);
+  }
+
+  /* ── Room diagram ── */
+  function dibujarSala(L, W, totalPaneles) {
+    const svg    = document.getElementById('roomSvg');
+    const pad    = 24;
+    const svgW   = 300;
+    const svgH   = 200;
+    const maxW   = svgW - pad * 2;
+    const maxH   = svgH - pad * 2;
+    const escala = Math.min(maxW / L, maxH / W);
+    const rW     = Math.round(L * escala);
+    const rH     = Math.round(W * escala);
+    const x0     = Math.round((svgW - rW) / 2);
+    const y0     = Math.round((svgH - rH) / 2);
+
+    // distribuir paneles en las 4 paredes
+    const perPared = Math.ceil(totalPaneles / 4);
+    const pSize    = 10;
+    const pGap     = 4;
+    const pTotal   = perPared * (pSize + pGap);
+
+    let html = `
+      <rect x="${x0}" y="${y0}" width="${rW}" height="${rH}"
+            fill="#1f1f1f" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      <text x="${svgW/2}" y="${y0 - 7}" text-anchor="middle"
+            font-size="9" fill="#666" font-family="system-ui">Largo ${L.toFixed(1)} m</text>
+      <text x="${x0 - 8}" y="${svgH/2}" text-anchor="middle"
+            font-size="9" fill="#666" font-family="system-ui"
+            transform="rotate(-90, ${x0 - 8}, ${svgH/2})">Ancho ${W.toFixed(1)} m</text>
+    `;
+
+    // pared superior (largo)
+    for (let i = 0; i < perPared; i++) {
+      const px = x0 + 8 + i * (pSize + pGap);
+      if (px + pSize > x0 + rW - 4) break;
+      html += `<rect x="${px}" y="${y0 + 2}" width="${pSize}" height="6"
+               fill="#c8a96e" opacity="0.85" rx="1"/>`;
+    }
+    // pared inferior (largo)
+    for (let i = 0; i < perPared; i++) {
+      const px = x0 + 8 + i * (pSize + pGap);
+      if (px + pSize > x0 + rW - 4) break;
+      html += `<rect x="${px}" y="${y0 + rH - 8}" width="${pSize}" height="6"
+               fill="#c8a96e" opacity="0.85" rx="1"/>`;
+    }
+    // pared izquierda (ancho)
+    for (let i = 0; i < perPared; i++) {
+      const py = y0 + 8 + i * (pSize + pGap);
+      if (py + pSize > y0 + rH - 4) break;
+      html += `<rect x="${x0 + 2}" y="${py}" width="6" height="${pSize}"
+               fill="#c8a96e" opacity="0.85" rx="1"/>`;
+    }
+    // pared derecha (ancho)
+    for (let i = 0; i < perPared; i++) {
+      const py = y0 + 8 + i * (pSize + pGap);
+      if (py + pSize > y0 + rH - 4) break;
+      html += `<rect x="${x0 + rW - 8}" y="${py}" width="6" height="${pSize}"
+               fill="#c8a96e" opacity="0.85" rx="1"/>`;
+    }
+
+    // leyenda
+    html += `
+      <rect x="${svgW - 100}" y="${svgH - 22}" width="10" height="8"
+            fill="#c8a96e" rx="1"/>
+      <text x="${svgW - 86}" y="${svgH - 15}"
+            font-size="9" fill="#888" font-family="system-ui">Panel acústico</text>
+    `;
+
+    svg.innerHTML = html;
+  }
+
+  calcular();
+</script>
+</body>
+</html>
     <footer>
         <nav class="social-bar" aria-label="Redes sociales">
 
