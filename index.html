@@ -372,7 +372,7 @@
     <section class="container" id="sobre-mi">
         <div class="history">
             <h2 class="section-title">Nuestra Historia</h2>
-            <p>Estudio de grabación con identidad propia. Situado en el Estanco familiar desde 1942, reconvertido en Estudio de Música. Soy <strong>Javi Montes Vicente</strong>, y mi música se nutre desde la Gaita y el folclore Asturiano, pasando por mandolina y bandurria en la Tuna de Derecho de Oviedo, el rock (Ilegales, Metallica, Extremoduro) y la pasión por el folclore sudamericano (Tres Cubano, Charango, Cuatro Puertorriqueño y ritmos como el Son, Bolero, Chacarera, Joropo).</p>
+            <p>Estudio de grabación con identidad propia. Situado en el Estanco familiar desde 1942, reconvertido en Estudio de Música. Soy <strong>Javi Montes Vicente</strong>, y mi música se nutre de este espacio histórico.</p>
             <p>Con 9 años de experiencia con sonido y producción, he creado una comunidad en torno a este espacio histórico para elevar proyectos con alma.</p>
 
             <div class="credly-badge">
@@ -385,27 +385,27 @@
 
         <h2 class="section-title">Canales y Portfolio</h2>
         <div class="links-grid">
-            <a href="https://youtube.com/@estudioestanco" class="link-card" target="_blank">
+            <a href="https://youtube.com/@estudioestanco" class="link-card" target="_blank" rel="noopener">
                 <h3>Estudio Estanco (YouTube)</h3>
                 <p>Contenido técnico y producciones</p>
             </a>
-            <a href="https://youtube.com/@LosManiseros" class="link-card" target="_blank">
+            <a href="https://youtube.com/@LosManiseros" class="link-card" target="_blank" rel="noopener">
                 <h3>Los Maniseros</h3>
                 <p>Música y folclore</p>
             </a>
-            <a href="https://www.instagram.com/estudioestanco" class="link-card" target="_blank">
+            <a href="https://www.instagram.com/estudioestanco" class="link-card" target="_blank" rel="noopener">
                 <h3>Instagram</h3>
                 <p>El día a día en el estudio</p>
             </a>
-            <a href="https://www.linkedin.com/in/javier-montes-vicente-7421b750" class="link-card" target="_blank">
+            <a href="https://www.linkedin.com/in/javier-montes-vicente-7421b750" class="link-card" target="_blank" rel="noopener">
                 <h3>LinkedIn</h3>
                 <p>Perfil profesional</p>
             </a>
-            <a href="https://www.tiktok.com/@estudioestanco" class="link-card" target="_blank">
+            <a href="https://www.tiktok.com/@estudioestanco" class="link-card" target="_blank" rel="noopener">
                 <h3>TikTok</h3>
                 <p>Shorts</p>
             </a>
-            <a href="https://www.facebook.com/share/1Dw9KWQLLX/" class="link-card" target="_blank">
+            <a href="https://www.facebook.com/share/1Dw9KWQLLX/" class="link-card" target="_blank" rel="noopener">
                 <h3>Facebook</h3>
                 <p>Redes Sociales</p>
             </a>
@@ -433,21 +433,14 @@
                     <div class="overlay-label">Estudio</div>
                 </div>
 
-              
-
-
-                <div class="gallery-item" onclick="openLightbox(8)">
+                <div class="gallery-item" onclick="openLightbox(3)">
                     <img src="img/IMG_2541.png" alt="Estudio" loading="lazy">
                     <div class="overlay-label">Estudio</div>
                 </div>
 
-
-                <div class="gallery-item" onclick="openLightbox(10)">
+                <div class="gallery-item" onclick="openLightbox(4)">
                     <img src="img/_AA_3458_Original.jpeg" alt="Fotografía" loading="lazy">
                     <div class="overlay-label">Fotografía</div>
-                </div>
-                
-
                 </div>
 
             </div>
@@ -535,30 +528,17 @@
     <script>
         // ===== LIGHTBOX =====
         const galleryImages = [
-            { src: 'img/1000024012_Original.jpeg',           label: 'Estudio' },
-            { src: 'img/IMG_2031.PNG',        label: 'Estudio' },
-            { src: 'img/IMG_1431_Original.jpeg',              label: 'Estudio' },
-            { src: 'img/IMG_20200617_002330_Original.jpeg',     label: 'Sesión' },
-            { src: 'img/IMG_0943.HEIC',     label: 'Producción' },
-            { src: 'img/MG_20230601_001455~3_Original.jpeg',           label: 'Estudio' },   
-            { src: 'IMG_0943.HEIC',           label: 'Estudio' },   
-            { src: 'IMG_2453.PNG',           label: 'Estudio' },  
-            
-EstudioEstanco
-EstudioEstanco
-',      label: 'Directo' },
-            { src: 'img/IMG_2453.PNG´,      label: 'Directo' },
-            { src: 'img/IMG_2031.PNG',      label: 'Concierto' },
-            { src: 'img/IMG_2541.png',                        label: 'Estudio' },
-            { src: 'img/IMG_1173.HEIC',     label: 'Proyecto' },
-            { src: 'img/_AA_3458_Original.jpeg',              label: 'Fotografía' },
-            { src: 'img/IMG_0943.HEIC',                        label: 'Estudio' },   
-            { src: 'img/IMG_2453.PNG',                        label: 'Estudio' },  
+            { src: 'img/1000024012_Original.jpeg', label: 'Estudio' },
+            { src: 'img/IMG_2031.PNG', label: 'Estudio' },
+            { src: 'img/IMG_1431_Original.jpeg', label: 'Estudio' },
+            { src: 'img/IMG_2541.png', label: 'Estudio' },
+            { src: 'img/_AA_3458_Original.jpeg', label: 'Fotografía' }
         ];
 
         let currentLightbox = 0;
 
         function openLightbox(index) {
+            if (!galleryImages[index]) return;
             currentLightbox = index;
             document.getElementById('lightboxImg').src = galleryImages[index].src;
             document.getElementById('lightbox').classList.add('active');
@@ -586,8 +566,9 @@ EstudioEstanco
             if (e.key === 'ArrowLeft') changeLightbox(-1);
         });
     </script>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/LsWXvg3EDoE?si=STC6nAHlhvMTukt6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/album/1KkctExyyrdoEjWD7ozyrm?utm_source=generator&si=0204e5eb711c42a2" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-<iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/album/4FnM1lEWU4v7OoztTrSlhd?utm_source=generator&si=28cff9c114ed442c" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/LsWXvg3EDoE?si=STC6nAHlhvMTukt6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/album/1KkctExyyrdoEjWD7ozyrm?utm_source=generator&si=0204e5eb711c42a2" width="100%" height="352" frameborder="0" allow="encrypted-media"></iframe>
+    <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/album/4FnM1lEWU4v7OoztTrSlhd?utm_source=generator&si=28cff9c114ed442c" width="100%" height="352" frameborder="0" allow="encrypted-media"></iframe>
 </body>
 </html>
